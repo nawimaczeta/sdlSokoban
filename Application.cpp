@@ -12,24 +12,47 @@
 #include "Game.h"
 
 const std::string Application::WINDOW_TITLE = "Game";
+const std::string Application::FILENAME_BLANK = "textures/blank.png";
+const std::string Application::FILENAME_PLAYER = "textures/player.png";
+const std::string Application::FILENAME_OBSTACLE = "textures/obstacle.png";
+const std::string Application::FILENAME_WALL = "textures/wall.png";
+const std::string Application::FILENAME_TARGET = "textures/target.png";
+const std::string Application::FILENAME_OBSTACLE_ON_TARGET = "textures/obstacle_on_target.png";
+
+const std::string Application::LEVEL_1{
+	"####\n"
+	"# t#\n"
+	"#  ###\n"
+	"#Op  #\n"
+	"#  o #\n"
+	"#  ###\n"
+	"####"};
 
 Application::Application() :
-	sdl(SDL_INIT_VIDEO),
-	window(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0),
-	renderer(window, -1, SDL_RENDERER_ACCELERATED)
-{}
+		sdl(SDL_INIT_VIDEO),
+		sdlWindow(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0),
+		game {levelProvider},
+		drawer{sdlWindow, levelProvider},
+		currentLevel { 0 }
+{
+	drawer.loadTexture(Item::BLANK, FILENAME_BLANK);
+	drawer.loadTexture(Item::OBSTACLE, FILENAME_OBSTACLE);
+	drawer.loadTexture(Item::OBSTACLE_ON_TARGET, FILENAME_OBSTACLE_ON_TARGET);
+	drawer.loadTexture(Item::PLAYER, FILENAME_PLAYER);
+	drawer.loadTexture(Item::PLAYER_ON_TARGET, FILENAME_PLAYER);
+	drawer.loadTexture(Item::TARGET, FILENAME_TARGET);
+	drawer.loadTexture(Item::WALL, FILENAME_WALL);
+
+	levelProvider.loadLevel(LEVEL_1);
+}
 
 Application::~Application() {
 
 }
 
 int Application::run() {
-	Game game;
-
 
 	SDL_Event sdlEvent;
-	int x = window.GetWidth();
-	int y = window.GetHeight();
 
 	while (true) {
 		while (SDL_PollEvent(&sdlEvent)) {
@@ -42,14 +65,7 @@ int Application::run() {
 				break;
 			}
 		}
-
-		renderer.SetDrawColor(0x00, 0x00, 0x00, 0xff);
-		renderer.Clear();
-		renderer.SetDrawColor(0x00, 0x80, 0x80, 0xff);
-		renderer.FillRect(10, 10, x - 10, y - 10);
-		renderer.Present();
-
-
+		drawer.drawLevel(currentLevel);
 		SDL_Delay(1000 / 60);	// 60 FPS
 	}
 

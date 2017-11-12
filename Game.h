@@ -12,16 +12,16 @@
 #include <vector>
 #include <memory>
 
-#include "Level.h"
+#include "LevelProvider.h"
 
 class Game {
 public:
-	Game();
-	unsigned loadLevel(std::string content);
+	Game(const LevelProvider & levelProvider);
+
+
 
 private:
-	unsigned currentLevel;
-	std::vector<std::unique_ptr<Level>> levels;
+	const LevelProvider & levelProvider;
 };
 
 
