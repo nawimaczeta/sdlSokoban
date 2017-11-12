@@ -23,6 +23,14 @@ public:
 		this->x = x;
 		this->y = y;
 	}
+
+	bool operator==(const Coords & c) const {
+		if (c.x == x && c.y == y) return true;
+		else return false;
+	}
+	bool operator!=(const Coords & c) const {
+		return !operator ==(c);
+	}
 private:
 	unsigned x;
 	unsigned y;

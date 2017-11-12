@@ -14,59 +14,124 @@ Game::Game(LevelProvider & levelProvider) :
 }
 
 bool Game::play(unsigned levelNumber, Direction direction) {
+	bool movePlayer = true;
+
 	Level & level = levelProvider.getLevel(levelNumber);
+	Coords playerPos = level.getPlayerPos();
+	Coords newPlayerPos = moveCoords(level, playerPos, direction);
 
-	movePlayer(level, direction);
+	if (playerPos == newPlayerPos) {
+		// player is not moved
+		return false;
+	}
 
+	// check collisions
+	Item itemOnNewPos = level.getItem(newPlayerPos);
+	Item newPlayerItemType = Item::PLAYER;		// PLAYER or PLAYER_ON_TARGET
+	Item playerReplacement = Item::BLANK;		// BLANK or TARGET
+	//Item player
+	bool obstacleMoved = false;
+	switch (itemOnNewPos) {
+	case Item::WALL:
+		movePlayer = false;
+		break;
+	case Item::OBSTACLE:
+		obstacleMoved = moveObstacle(level, newPlayerPos, direction);
+		if (obstacleMoved) {
+			movePlayer = true;
+		} else {
+			movePlayer = false;
+		}
+		break;
+	case Item::OBSTACLE_ON_TARGET:
+		obstacleMoved = moveObstacle(level, newPlayerPos, direction);
+		if (obstacleMoved) {
+			movePlayer = true;
+			newPlayerItemType = Item::PLAYER_ON_TARGET;
+		} else {
+			movePlayer = false;
+		}
+		break;
+	case Item::TARGET:
+		newPlayerItemType = Item::PLAYER_ON_TARGET;
+		break;
+	default:
+		movePlayer = true;
+	}
 
+	if (level.getItem(level.getPlayerPos()) == Item::PLAYER_ON_TARGET) {
+		playerReplacement = Item::TARGET;
+	}
+
+	if (movePlayer) {
+		level.setItem(newPlayerPos, newPlayerItemType);
+
+		level.setItem(level.getPlayerPos(), playerReplacement);
+		level.setPlayerPos(newPlayerPos);
+	}
 	return false;
 }
 
-void Game::movePlayer(Level & level, Direction direction) {
-	Coords player{level.getPlayerPos()};
+Coords Game::moveCoords(Level & level, Coords coords, Direction direction) {
 	Coords size{level.getSize()};
-	bool isMoved = false;
 
 	switch (direction) {
 	case Direction::UP:
-		if (player.getY() > 0) {
-			player.setY(player.getY() - 1);
-			isMoved = true;
+		if (coords.getY() > 0) {
+			coords.setY(coords.getY() - 1);
 		}
 		break;
 	case Direction::DOWN:
-		if (player.getY() < size.getY() - 1) {
-			player.setY(player.getY() + 1);
-			isMoved = true;
+		if (coords.getY() < size.getY() - 1) {
+			coords.setY(coords.getY() + 1);
 		}
 		break;
 	case Direction::LEFT:
-		if (player.getX() > 0) {
-			player.setX(player.getX() - 1);
-			isMoved = true;
+		if (coords.getX() > 0) {
+			coords.setX(coords.getX() - 1);
 		}
 		break;
 	case Direction::RIGHT:
-		if (player.getX() < size.getX() - 1) {
-			player.setX(player.getX() + 1);
-			isMoved = true;
+		if (coords.getX() < size.getX() - 1) {
+			coords.setX(coords.getX() + 1);
 		}
 		break;
 	default:
 		break;
 	}
 
-	if (!isMoved) {
-		return;
+	return coords;
+}
+
+bool Game::moveObstacle(Level & level, Coords coords, Direction direction) {
+	bool obstacleMove = false;
+	Coords newObstaclePos = moveCoords(level, coords, direction);
+
+	if (newObstaclePos == coords) {
+		return false;
 	}
 
-	level.setItem(player, Item::PLAYER);
-	level.setItem(level.getPlayerPos(), Item::BLANK);
-	level.setPlayerPos(player);
+	Item obstacle2Draw = Item::OBSTACLE;
+	if (newObstaclePos != coords) {
+		Item newObstalcePosItem = level.getItem(newObstaclePos);
+		switch (newObstalcePosItem) {
+		case Item::WALL:
+		case Item::OBSTACLE:
+		case Item::OBSTACLE_ON_TARGET:
+			obstacleMove = false;
+			break;
+		case Item::TARGET:
+			obstacle2Draw = Item::OBSTACLE_ON_TARGET;
+			obstacleMove = true;
+			break;
+		default:
+			obstacleMove = true;
+		}
 
-//	Item itemOnNewPos{level.getItem(player)};
-//	switch (itemOnNewPos) {
-//	case Item::WALL:
-//
-//	}
+		if (obstacleMove) {
+			level.setItem(newObstaclePos, obstacle2Draw);
+		}
+	}
+
+	return obstacleMove;
 }

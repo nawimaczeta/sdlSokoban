@@ -64,46 +64,53 @@ Application::~Application() {
 }
 
 int Application::run() {
-
-	SDL_Event sdlEvent;
 	Direction direction;
 
-	while (true) {
-		direction = Direction::NONE;
+	while (!processInputs(direction)) {
 
-		while (SDL_PollEvent(&sdlEvent)) {
-			switch (sdlEvent.type) {
-			case SDL_QUIT:
-				return 0;
-				break;
-			case SDL_KEYDOWN:
-				switch (sdlEvent.key.keysym.sym) {
-				case SDLK_SPACE:
-					currentLevel++;
-					if (currentLevel >= levelProvider.getNumberOfLevels()) {
-						currentLevel = 0;
-					}
-					break;
-				case SDLK_UP:
-					direction = Direction::UP;
-					break;
-				case SDLK_DOWN:
-					direction = Direction::DOWN;
-					break;
-				case SDLK_LEFT:
-					direction = Direction::LEFT;
-					break;
-				case SDLK_RIGHT:
-					direction = Direction::RIGHT;
-					break;
-				}
-				break;
-			}
-		}
 		game.play(currentLevel, direction);
 		drawer.drawLevel(currentLevel);
 		SDL_Delay(1000 / 60);	// 60 FPS
 	}
 
 	return 1;
+}
+
+bool Application::processInputs(Direction & direction) {
+	SDL_Event sdlEvent;
+	bool quitGame = false;
+
+	direction = Direction::NONE;
+
+	while (SDL_PollEvent(&sdlEvent)) {
+		switch (sdlEvent.type) {
+		case SDL_QUIT:
+			quitGame = true;
+			break;
+		case SDL_KEYDOWN:
+			switch (sdlEvent.key.keysym.sym) {
+			case SDLK_SPACE:
+				currentLevel++;
+				if (currentLevel >= levelProvider.getNumberOfLevels()) {
+					currentLevel = 0;
+				}
+				break;
+			case SDLK_UP:
+				direction = Direction::UP;
+				break;
+			case SDLK_DOWN:
+				direction = Direction::DOWN;
+				break;
+			case SDLK_LEFT:
+				direction = Direction::LEFT;
+				break;
+			case SDLK_RIGHT:
+				direction = Direction::RIGHT;
+				break;
+			}
+			break;
+		}
+	}
+
+	return quitGame;
 }

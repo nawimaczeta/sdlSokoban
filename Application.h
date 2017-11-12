@@ -42,6 +42,8 @@ private:
 	Game game;
 	Drawer drawer;
 	unsigned currentLevel;
+
+	bool processInputs(Direction & direction);
 };
 
 
