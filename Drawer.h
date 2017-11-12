@@ -30,12 +30,13 @@ public:
 	void drawLevel(const unsigned levelNumber);
 
 private:
-	static const std::string BLANK_TEXTURE_FILE_NAME;
+	static const std::string EMPTY_TEXTURE_FILE_NAME;
+	static const unsigned TEXTURE_SIZE = 40;
 
 	SDL2pp::Window &sdlWindow;
 	SDL2pp::Renderer sdlRenderer;
 	std::map<Item, SDL2pp::Texture> textureMap;
-	SDL2pp::Texture blankTexture;
+	SDL2pp::Texture emptyTexture;
 
 	LevelProvider & levelProvider;
 

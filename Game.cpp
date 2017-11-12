@@ -29,7 +29,7 @@ bool Game::play(unsigned levelNumber, Direction direction) {
 	Item itemOnNewPos = level.getItem(newPlayerPos);
 	Item newPlayerItemType = Item::PLAYER;		// PLAYER or PLAYER_ON_TARGET
 	Item playerReplacement = Item::BLANK;		// BLANK or TARGET
-	//Item player
+
 	bool obstacleMoved = false;
 	switch (itemOnNewPos) {
 	case Item::WALL:
@@ -65,7 +65,6 @@ bool Game::play(unsigned levelNumber, Direction direction) {
 
 	if (movePlayer) {
 		level.setItem(newPlayerPos, newPlayerItemType);
-
 		level.setItem(level.getPlayerPos(), playerReplacement);
 		level.setPlayerPos(newPlayerPos);
 	}
