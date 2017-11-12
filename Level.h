@@ -25,9 +25,14 @@ public:
 
 	Level(const std::string & content);
 	void loadFromString(const std::string & map);
+
 	Coords getSize() const;
 	Item getItem(unsigned x, unsigned y);
-	bool play(Direction direction);
+	Item getItem(Coords coords);
+	Coords getPlayerPos() const;
+
+	void setItem(Coords pos, Item item);
+	void setPlayerPos(Coords pos);
 
 private:
 	static const char SYMBOL_BLANK 				= ' ';

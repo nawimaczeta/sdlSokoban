@@ -119,6 +119,26 @@ Item Level::getItem(unsigned x, unsigned y) {
 	return boardMap->get(x, y);
 }
 
+Item Level::getItem(Coords coords) {
+	return getItem(coords.getX(), coords.getY());
+}
+
+Coords Level::getPlayerPos() const {
+	return player;
+}
+
+void Level::setItem(Coords pos, Item item) {
+	boardMap->set(pos.getX(), pos.getY(), item);
+}
+
+void Level::setPlayerPos(Coords pos) {
+	if (pos.getX() > width || pos.getY() > height) {
+		throw std::out_of_range("Player pos");
+	}
+
+	player = pos;
+}
+
 Item Level::symbol2Item(char symbol) {
 	Item item;
 

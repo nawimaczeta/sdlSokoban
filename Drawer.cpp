@@ -33,9 +33,9 @@ void Drawer::loadTexture(const Item item, const std::string & textureFileName) {
 }
 
 void Drawer::drawLevel(const unsigned levelNumber)  {
-	const unsigned TEXTURE_SIZE = 20;
+	const unsigned TEXTURE_SIZE = 80;
 
-	sdlRenderer.SetDrawColor(0, 0xff, 0x00, 0xff);
+	sdlRenderer.SetDrawColor(128, 255, 0x00, 0xff);
 	sdlRenderer.Clear();
 
 	Coords mapSize = levelProvider.getLevelSize(levelNumber);

@@ -16,12 +16,16 @@
 
 class Game {
 public:
-	Game(const LevelProvider & levelProvider);
+	Game(LevelProvider & levelProvider);
+	Game(const Game&) = delete;
+	Game& operator=(const Game&) = delete;
 
+	bool play(unsigned levelNumber, Direction direction);
+	void movePlayer(Level & level, Direction direction);
 
 
 private:
-	const LevelProvider & levelProvider;
+	LevelProvider & levelProvider;
 };
 
 

@@ -28,6 +28,18 @@ const std::string Application::LEVEL_1{
 	"#  ###\n"
 	"####"};
 
+const std::string Application::LEVEL_2 {
+	"  #####\n"
+	"###   #\n"
+	"#tpo  #\n"
+	"### ot#\n"
+	"#t##o #\n"
+	"# # t ##\n"
+	"#o Ooot#\n"
+	"#   t  #\n"
+	"########"
+};
+
 Application::Application() :
 		sdl(SDL_INIT_VIDEO),
 		sdlWindow(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0),
@@ -44,6 +56,7 @@ Application::Application() :
 	drawer.loadTexture(Item::WALL, FILENAME_WALL);
 
 	levelProvider.loadLevel(LEVEL_1);
+	levelProvider.loadLevel(LEVEL_2);
 }
 
 Application::~Application() {
@@ -53,18 +66,41 @@ Application::~Application() {
 int Application::run() {
 
 	SDL_Event sdlEvent;
+	Direction direction;
 
 	while (true) {
+		direction = Direction::NONE;
+
 		while (SDL_PollEvent(&sdlEvent)) {
 			switch (sdlEvent.type) {
 			case SDL_QUIT:
 				return 0;
 				break;
 			case SDL_KEYDOWN:
-				std::cout << "Key pressed: " << std::to_string(sdlEvent.key.keysym.sym) << "\n";
+				switch (sdlEvent.key.keysym.sym) {
+				case SDLK_SPACE:
+					currentLevel++;
+					if (currentLevel >= levelProvider.getNumberOfLevels()) {
+						currentLevel = 0;
+					}
+					break;
+				case SDLK_UP:
+					direction = Direction::UP;
+					break;
+				case SDLK_DOWN:
+					direction = Direction::DOWN;
+					break;
+				case SDLK_LEFT:
+					direction = Direction::LEFT;
+					break;
+				case SDLK_RIGHT:
+					direction = Direction::RIGHT;
+					break;
+				}
 				break;
 			}
 		}
+		game.play(currentLevel, direction);
 		drawer.drawLevel(currentLevel);
 		SDL_Delay(1000 / 60);	// 60 FPS
 	}

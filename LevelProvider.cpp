@@ -14,6 +14,10 @@ void LevelProvider::loadLevel(const std::string & content) {
 	levels.push_back(std::move(lp));
 }
 
+Level & LevelProvider::getLevel(unsigned index) {
+	return *levels.at(index);
+}
+
 Item LevelProvider::getLevelItem(const unsigned index, const unsigned x, const unsigned y) {
 	if (index > levels.size()) {
 		throw std::out_of_range("Level index " + std::to_string(index) +" out of range\n");
@@ -25,6 +29,10 @@ Item LevelProvider::getLevelItem(const unsigned index, const unsigned x, const u
 	}
 
 	return levels.at(index)->getItem(x, y);
+}
+
+unsigned LevelProvider::getNumberOfLevels() const {
+	return levels.size();
 }
 
 Coords LevelProvider::getLevelSize(const unsigned index) {
