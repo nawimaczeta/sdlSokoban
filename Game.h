@@ -21,14 +21,13 @@ public:
 	Game& operator=(const Game&) = delete;
 
 	bool play(unsigned levelNumber, Direction direction);
-
-
-
 private:
 	LevelProvider & levelProvider;
 
 	Coords moveCoords(Level & level, Coords coords, Direction direction);
+	bool movePlayer(Level & level, Direction direction);
 	bool moveObstacle(Level & level, Coords coords, Direction direction);
+	bool checkIfWin(Level & level);
 };
 
 

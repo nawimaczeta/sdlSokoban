@@ -14,9 +14,7 @@ class LevelProvider {
 public:
 	void loadLevel(const std::string & content);
 	unsigned getNumberOfLevels() const;
-	Level & getLevel(unsigned index);
-	Item getLevelItem(const unsigned index, const unsigned x, const unsigned y);
-	Coords getLevelSize(const unsigned index);
+	Level & getLevel(unsigned index) const;
 private:
 	std::vector<std::unique_ptr<Level>> levels;
 };

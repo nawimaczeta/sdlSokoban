@@ -14,11 +14,21 @@ Game::Game(LevelProvider & levelProvider) :
 }
 
 bool Game::play(unsigned levelNumber, Direction direction) {
-	bool movePlayer = true;
-
 	Level & level = levelProvider.getLevel(levelNumber);
+	bool isWon;
+
+	bool isPlayerMoved = movePlayer(level, direction);
+	if (isPlayerMoved) {
+		isWon = checkIfWin(level);
+	}
+
+	return isWon;
+}
+
+bool Game::movePlayer(Level & level, Direction direction) {
 	Coords playerPos = level.getPlayerPos();
 	Coords newPlayerPos = moveCoords(level, playerPos, direction);
+	bool playerMoveRequest;
 
 	if (playerPos == newPlayerPos) {
 		// player is not moved
@@ -33,42 +43,45 @@ bool Game::play(unsigned levelNumber, Direction direction) {
 	bool obstacleMoved = false;
 	switch (itemOnNewPos) {
 	case Item::WALL:
-		movePlayer = false;
+		playerMoveRequest = false;
 		break;
 	case Item::OBSTACLE:
 		obstacleMoved = moveObstacle(level, newPlayerPos, direction);
 		if (obstacleMoved) {
-			movePlayer = true;
+			playerMoveRequest = true;
 		} else {
-			movePlayer = false;
+			playerMoveRequest = false;
 		}
 		break;
 	case Item::OBSTACLE_ON_TARGET:
 		obstacleMoved = moveObstacle(level, newPlayerPos, direction);
 		if (obstacleMoved) {
-			movePlayer = true;
+			playerMoveRequest = true;
 			newPlayerItemType = Item::PLAYER_ON_TARGET;
 		} else {
-			movePlayer = false;
+			playerMoveRequest = false;
 		}
 		break;
 	case Item::TARGET:
 		newPlayerItemType = Item::PLAYER_ON_TARGET;
+		playerMoveRequest = true;
 		break;
 	default:
-		movePlayer = true;
+		playerMoveRequest = true;
 	}
 
 	if (level.getItem(level.getPlayerPos()) == Item::PLAYER_ON_TARGET) {
 		playerReplacement = Item::TARGET;
 	}
 
-	if (movePlayer) {
+	if (playerMoveRequest) {
+		// update level map
 		level.setItem(newPlayerPos, newPlayerItemType);
 		level.setItem(level.getPlayerPos(), playerReplacement);
 		level.setPlayerPos(newPlayerPos);
 	}
-	return false;
+
+	return playerMoveRequest;
 }
 
 Coords Game::moveCoords(Level & level, Coords coords, Direction direction) {
@@ -133,4 +146,9 @@ bool Game::moveObstacle(Level & level, Coords coords, Direction direction) {
 	}
 
 	return obstacleMove;
+}
+
+bool Game::checkIfWin(Level & level) {
+	// TODO dummy implementation
+	return false;
 }

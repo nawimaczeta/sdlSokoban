@@ -21,14 +21,12 @@ enum class Direction {NONE, UP, DOWN, LEFT, RIGHT};
 
 class Level {
 public:
-	static const unsigned SYMBOL_COUNT = 7;	// number of different items
-
 	Level(const std::string & content);
 	void loadFromString(const std::string & map);
 
 	Coords getSize() const;
-	Item getItem(unsigned x, unsigned y);
-	Item getItem(Coords coords);
+	Item getItem(unsigned x, unsigned y) const;
+	Item getItem(Coords coords) const;
 	Coords getPlayerPos() const;
 
 	void setItem(Coords pos, Item item);
@@ -50,7 +48,7 @@ private:
 	unsigned obstaclesNumber;
 	unsigned targetsNumber;
 
-	Item symbol2Item(char symbol);
+	static Item symbol2Item(char symbol);
 
 };
 

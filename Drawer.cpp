@@ -21,7 +21,7 @@ Drawer::Drawer(SDL2pp::Window & window, LevelProvider & levelProvider) :
 void Drawer::loadTexture(const Item item, const std::string & textureFileName) {
 	SDL2pp::Texture texture{sdlRenderer, textureFileName};
 
-	// check is the item has been in the map yet
+	// check if the item has been in the map yet
 	auto it = textureMap.find(item);
 	if (it != textureMap.end()) {
 		// element exists
@@ -34,22 +34,19 @@ void Drawer::loadTexture(const Item item, const std::string & textureFileName) {
 
 void Drawer::drawLevel(const unsigned levelNumber)  {
 	Level & level = levelProvider.getLevel(levelNumber);
+
+	unsigned offsetX;
+	unsigned offsetY;
+
+	// we want to draw the map in the center of the screen.
+	// get offsets. We will add them to x and y coords while drawing
+	centerMapGetOffset(
+			level,
+			static_cast<unsigned>(sdlRenderer.GetOutputWidth()),
+			static_cast<unsigned>(sdlRenderer.GetOutputHeight()),
+			offsetX, offsetY);
+
 	Coords mapSize = level.getSize();
-
-	unsigned screenX = static_cast<unsigned>(sdlRenderer.GetOutputWidth());
-	unsigned screenY = static_cast<unsigned>(sdlRenderer.GetOutputHeight());
-
-	unsigned mapSizePixelsX = mapSize.getX() * TEXTURE_SIZE;
-	unsigned mapSizePixelsY = mapSize.getY() * TEXTURE_SIZE;
-	if (mapSizePixelsX > screenX ||
-			mapSizePixelsY > screenY) {
-		throw std::runtime_error("Map size is too big " +
-				std::to_string(mapSizePixelsX) + " " + std::to_string(mapSizePixelsY));
-	}
-
-	// get offsets. We want to place the map in the center
-	unsigned xOffset = (screenX - mapSizePixelsX) / 2;
-	unsigned yOffset = (screenY - mapSizePixelsY) / 2;
 
 	sdlRenderer.SetDrawColor(0, 0, 0, 0xff).Clear();
 
@@ -62,11 +59,10 @@ void Drawer::drawLevel(const unsigned levelNumber)  {
 					texture,
 					SDL2pp::NullOpt,
 					SDL2pp::Rect{
-				static_cast<int>(i * TEXTURE_SIZE + xOffset),
-				static_cast<int>(j * TEXTURE_SIZE + yOffset),
+				static_cast<int>(i * TEXTURE_SIZE + offsetX),
+				static_cast<int>(j * TEXTURE_SIZE + offsetY),
 				static_cast<int>(TEXTURE_SIZE),
 				static_cast<int>(TEXTURE_SIZE)});
-
 		}
 	}
 
@@ -81,4 +77,22 @@ SDL2pp::Texture & Drawer::getTexture(const Item item) {
 	} else {
 		return emptyTexture;
 	}
+}
+
+void Drawer::centerMapGetOffset(Level & level,
+		unsigned screenX, unsigned screenY,
+		unsigned & offsetX, unsigned & offsetY) {
+	Coords mapSize = level.getSize();
+
+	unsigned mapSizePixelsX = mapSize.getX() * TEXTURE_SIZE;
+	unsigned mapSizePixelsY = mapSize.getY() * TEXTURE_SIZE;
+	if (mapSizePixelsX > screenX ||
+			mapSizePixelsY > screenY) {
+		throw std::runtime_error("Map size is too big " +
+				std::to_string(mapSizePixelsX) + " " + std::to_string(mapSizePixelsY));
+	}
+
+	// get offsets. We want to place the map in the center
+	offsetX = (screenX - mapSizePixelsX) / 2;
+	offsetY = (screenY - mapSizePixelsY) / 2;
 }

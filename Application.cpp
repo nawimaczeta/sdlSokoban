@@ -67,7 +67,6 @@ int Application::run() {
 	Direction direction;
 
 	while (!processInputs(direction)) {
-
 		game.play(currentLevel, direction);
 		drawer.drawLevel(currentLevel);
 		SDL_Delay(1000 / 60);	// 60 FPS

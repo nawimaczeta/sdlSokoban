@@ -111,7 +111,7 @@ Coords Level::getSize() const {
 	return c;
 }
 
-Item Level::getItem(unsigned x, unsigned y) {
+Item Level::getItem(unsigned x, unsigned y) const {
 	if (x > width || y > height) {
 		throw std::out_of_range{"Coords out of range\n"};
 	}
@@ -119,7 +119,7 @@ Item Level::getItem(unsigned x, unsigned y) {
 	return boardMap->get(x, y);
 }
 
-Item Level::getItem(Coords coords) {
+Item Level::getItem(Coords coords) const {
 	return getItem(coords.getX(), coords.getY());
 }
 

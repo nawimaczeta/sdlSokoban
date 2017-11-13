@@ -28,7 +28,7 @@ public:
 				", requested cords: x=" + std::to_string(x) + " y=" +
 				std::to_string(y) + " index: " + std::to_string((x % sizeX) + sizeY* y));
 		}
-		return matrix.at(x + y * (sizeY - 1));
+		return matrix.at(xy2index(x, y));
 	}
 
 	void set(unsigned x, unsigned y, T value) {
@@ -39,7 +39,7 @@ public:
 					", requested cords: x=" + std::to_string(x) + " y=" +
 					std::to_string(y) + " index: " + std::to_string((x % sizeX) + sizeY* y));
 		}
-		matrix[x + (sizeY - 1)* y] = value;
+		matrix[xy2index(x, y)] = value;
 	}
 
 	unsigned getSizeX() const {
@@ -57,6 +57,9 @@ private:
 	unsigned sizeY;
 
 	std::vector<T> matrix;
+	unsigned xy2index(unsigned x, unsigned y) const {
+		return (x + (sizeY - 1)* y);
+	}
 };
 
 #endif /* MATRIX2D_H_ */

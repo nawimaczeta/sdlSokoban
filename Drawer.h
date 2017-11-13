@@ -41,6 +41,9 @@ private:
 	LevelProvider & levelProvider;
 
 	SDL2pp::Texture & getTexture(const Item item);
+	void centerMapGetOffset(Level & level,
+			unsigned screenX, unsigned screenY,
+			unsigned & offsetX, unsigned & offsetY);
 };
 
 

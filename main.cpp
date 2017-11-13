@@ -5,9 +5,6 @@
  *      Author: li
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2pp/SDL.hh>
-
 #include "Application.h"
 
 int main() {
