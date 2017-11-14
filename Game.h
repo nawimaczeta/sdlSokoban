@@ -20,7 +20,7 @@ public:
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
 
-	bool play(unsigned levelNumber, Direction direction);
+	void play(unsigned levelNumber, Direction direction);
 private:
 	LevelProvider & levelProvider;
 

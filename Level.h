@@ -28,9 +28,12 @@ public:
 	Item getItem(unsigned x, unsigned y) const;
 	Item getItem(Coords coords) const;
 	Coords getPlayerPos() const;
+	unsigned getCountOfItem(Item item) const;
+	bool getWon() const;
 
 	void setItem(Coords pos, Item item);
 	void setPlayerPos(Coords pos);
+	void setWon(const bool won);
 
 private:
 	static const char SYMBOL_BLANK 				= ' ';
@@ -45,8 +48,9 @@ private:
 	unsigned width;
 	unsigned height;
 	Coords player;
-	unsigned obstaclesNumber;
-	unsigned targetsNumber;
+	unsigned obstaclesCount;
+	unsigned targetsCount;
+	bool levelWon;
 
 	static Item symbol2Item(char symbol);
 

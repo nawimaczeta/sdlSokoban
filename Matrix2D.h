@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 template <typename T>
 class Matrix2D {
@@ -48,6 +49,13 @@ public:
 
 	unsigned getSizeY() const {
 		return sizeY;
+	}
+
+	unsigned getCountOfItems(T & item) {
+		return std::count(
+				std::begin(matrix),
+				std::end(matrix),
+				item);
 	}
 
 

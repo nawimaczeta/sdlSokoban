@@ -16,8 +16,9 @@ Level::Level(const std::string & content) :
 		boardMap { nullptr },
 		width { 0 },
 		height { 0 },
-		obstaclesNumber { 0 },
-		targetsNumber { 0 } {
+		obstaclesCount { 0 },
+		targetsCount { 0 },
+		levelWon{ false } {
 	loadFromString(content);
 }
 
@@ -74,11 +75,11 @@ void Level::loadFromString(const std::string & map) {
 			}
 			// count targets and obstacles
 			if (c == SYMBOL_OBSTACLE || c == SYMBOL_OBSTACLE_ON_TARGET) {
-				obstaclesNumber++;
+				obstaclesCount++;
 			}
 			if (c == SYMBOL_TARGET || c == SYMBOL_OBSTACLE_ON_TARGET
 					|| c == SYMBOL_PLAYER_ON_TARGET) {
-				targetsNumber++;
+				targetsCount++;
 			}
 
 			Item item = symbol2Item(c);
@@ -89,10 +90,10 @@ void Level::loadFromString(const std::string & map) {
 	if (!isPlayerFound) {
 		throw std::range_error { "Player not found\n" };
 	}
-	if (obstaclesNumber != targetsNumber) {
+	if (obstaclesCount != targetsCount) {
 		throw std::range_error { "Number of obstacles != number of targets\n" };
 	}
-	if (targetsNumber == 0) {
+	if (targetsCount == 0) {
 		throw std::range_error { "No targets on map\n" };
 	}
 
@@ -137,6 +138,18 @@ void Level::setPlayerPos(Coords pos) {
 	}
 
 	player = pos;
+}
+
+void Level::setWon(const bool won) {
+	levelWon = won;
+}
+
+bool Level::getWon() const {
+	return levelWon;
+}
+
+unsigned Level::getCountOfItem(Item item) const {
+	return boardMap->getCountOfItems(item);
 }
 
 Item Level::symbol2Item(char symbol) {

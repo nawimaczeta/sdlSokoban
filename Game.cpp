@@ -13,16 +13,16 @@ Game::Game(LevelProvider & levelProvider) :
 		levelProvider { levelProvider } {
 }
 
-bool Game::play(unsigned levelNumber, Direction direction) {
+void Game::play(unsigned levelNumber, Direction direction) {
 	Level & level = levelProvider.getLevel(levelNumber);
-	bool isWon;
 
-	bool isPlayerMoved = movePlayer(level, direction);
-	if (isPlayerMoved) {
-		isWon = checkIfWin(level);
+	// play if level is not won
+	if (!level.getWon()) {
+		bool isPlayerMoved = movePlayer(level, direction);
+		if (isPlayerMoved) {
+			level.setWon(checkIfWin(level));
+		}
 	}
-
-	return isWon;
 }
 
 bool Game::movePlayer(Level & level, Direction direction) {
@@ -149,6 +149,9 @@ bool Game::moveObstacle(Level & level, Coords coords, Direction direction) {
 }
 
 bool Game::checkIfWin(Level & level) {
-	// TODO dummy implementation
-	return false;
+	if (level.getCountOfItem(Item::OBSTACLE) == 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
