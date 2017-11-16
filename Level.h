@@ -22,6 +22,8 @@ enum class Direction {NONE, UP, DOWN, LEFT, RIGHT};
 class Level {
 public:
 	Level(const std::string & content);
+	Level(const Level&);	// copy constructor
+
 	void loadFromString(const std::string & map);
 
 	Coords getSize() const;

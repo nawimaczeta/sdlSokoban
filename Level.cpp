@@ -22,6 +22,16 @@ Level::Level(const std::string & content) :
 	loadFromString(content);
 }
 
+Level::Level(const Level& l) :
+		boardMap { std::unique_ptr<Matrix2D<Item>>{new Matrix2D<Item>{*l.boardMap}} },
+		width {l.width},
+		height {l.height},
+		player {l.player},
+		obstaclesCount {l.obstaclesCount},
+		targetsCount {l.targetsCount},
+		levelWon{l.levelWon} {
+}
+
 void Level::loadFromString(const std::string & map) {
 	char delimiter = '\n';
 	std::stringstream ss { map };

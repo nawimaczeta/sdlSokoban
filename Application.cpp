@@ -40,6 +40,17 @@ const std::string Application::LEVEL_2 {
 	"########"
 };
 
+const std::string Application::LEVEL_3 {
+	" #####\n"
+	" #   ###\n"
+	"## # o #\n"
+	"# ttpt #\n"
+	"# o o ##\n"
+	"###o#t#\n"
+	"  #   #\n"
+	"  #####\n"
+};
+
 Application::Application() :
 		sdl(SDL_INIT_VIDEO),
 		sdlWindow(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0),
@@ -57,6 +68,7 @@ Application::Application() :
 
 	levelProvider.loadLevel(LEVEL_1);
 	levelProvider.loadLevel(LEVEL_2);
+	levelProvider.loadLevel(LEVEL_3);
 }
 
 Application::~Application() {
@@ -88,12 +100,6 @@ bool Application::processInputs(Direction & direction) {
 			break;
 		case SDL_KEYDOWN:
 			switch (sdlEvent.key.keysym.sym) {
-			case SDLK_SPACE:
-				currentLevel++;
-				if (currentLevel >= levelProvider.getNumberOfLevels()) {
-					currentLevel = 0;
-				}
-				break;
 			case SDLK_UP:
 				direction = Direction::UP;
 				break;
@@ -105,6 +111,25 @@ bool Application::processInputs(Direction & direction) {
 				break;
 			case SDLK_RIGHT:
 				direction = Direction::RIGHT;
+				break;
+			case SDLK_PERIOD:
+				currentLevel++;
+				if (currentLevel >= levelProvider.getNumberOfLevels()) {
+					currentLevel = 0;
+				}
+				break;
+			case SDLK_COMMA:
+				if (currentLevel > 0) {
+					currentLevel--;
+				} else {
+					currentLevel = levelProvider.getNumberOfLevels() - 1;
+				}
+				break;
+			case SDLK_n:
+				levelProvider.restartLevel(currentLevel);
+				break;
+			case SDLK_z:
+				levelProvider.undo(currentLevel);
 				break;
 			}
 			break;

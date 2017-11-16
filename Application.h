@@ -34,6 +34,7 @@ private:
 
 	static const std::string LEVEL_1;
 	static const std::string LEVEL_2;
+	static const std::string LEVEL_3;
 
 	SDL2pp::SDL sdl;
 	SDL2pp::Window sdlWindow;

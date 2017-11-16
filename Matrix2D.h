@@ -16,9 +16,14 @@ template <typename T>
 class Matrix2D {
 public:
 	Matrix2D(unsigned x, unsigned y) :
-		sizeX(x), sizeY(y) {
+		sizeX{x}, sizeY{y} {
 		matrix.resize(sizeX * sizeY);
 		std::cout << "matrix size: " << std::to_string((sizeX) * (sizeY)) << "\n";
+	}
+
+	Matrix2D(const Matrix2D & m ) :
+		sizeX{m.sizeX}, sizeY{m.sizeY}, matrix{m.matrix}
+		{
 	}
 
 	T get(unsigned x, unsigned y) const {
